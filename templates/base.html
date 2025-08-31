@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Prestige Detailing | Lebanon{% endblock %}</title>
+  <meta name="description" content="Premium car wash, detailing, paint polish, and window tint in Beirut. Book online and get instant confirmation.">
+  <meta name="theme-color" content="#0f172a">
+  <meta property="og:title" content="Prestige Detailing | Beirut">
+  <meta property="og:description" content="Premium car wash, detailing, polish, and tint. Book online.">
+  <meta property="og:image" content="{{ url_for('static', filename='og-cover.jpg') }}">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}</style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <!-- Header -->
+  <header class="bg-white/90 backdrop-blur sticky top-0 z-40 border-b">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="{{ url_for('index') }}" class="flex items-center gap-3">
+        <img src="{{ url_for('static', filename='logo.svg') }}" alt="Prestige Detailing" class="h-8 w-auto">
+        <span class="font-semibold tracking-tight">Prestige Detailing</span>
+      </a>
+
+      <!-- Desktop nav -->
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="{{ url_for('index') }}#services" class="hover:underline">Services</a>
+        <a href="{{ url_for('index') }}#book" class="hover:underline">Book</a>
+        <a href="https://wa.me/96176321010" class="px-3 py-1.5 rounded-lg bg-emerald-500 text-white">Contact</a>
+      </nav>
+
+      <!-- Mobile menu button -->
+      <button id="menuBtn" class="md:hidden p-2 rounded-lg border" aria-label="menu">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+
+    <!-- Mobile dropdown -->
+    <div id="mobileMenu" class="md:hidden hidden border-t bg-white">
+      <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-3 text-sm">
+        <a href="{{ url_for('index') }}#services" class="py-1">Services</a>
+        <a href="{{ url_for('index') }}#book" class="py-1">Book</a>
+        <a href="https://wa.me/96176321010" class="py-1">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="mt-16 border-t">
+    <div class="max-w-6xl mx-auto px-4 py-10 grid md:grid-cols-4 gap-8 text-sm">
+      <div>
+        <div class="flex items-center gap-3">
+          <img src="{{ url_for('static', filename='logo.svg') }}" alt="" class="h-7 w-auto">
+          <span class="font-semibold">Prestige Detailing</span>
+        </div>
+        <p class="text-slate-600 mt-3">Kfarfakoud, Lebanon • {{ tz }}</p>
+        <p class="text-slate-600">Tue–Sat 9:00 AM–7:00 PM</p>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-2">Services</h4>
+        <ul class="space-y-1 text-slate-600">
+          <li>Quick Wash</li>
+          <li>Signature Wash</li>
+          <li>Interior Detail</li>
+          <li>Paint Polish</li>
+          <li>Window Tint</li>
+        </ul>
+      </div>
+        <div>
+          <h4 class="font-semibold mb-2">Company</h4>
+          <ul class="space-y-1 text-slate-600">
+            <li><a class="hover:underline" href="{{ url_for('index') }}#faq">FAQ</a></li>
+            <li><a class="hover:underline" href="{{ url_for('privacy') }}">Privacy Policy</a></li>
+            <li><a class="hover:underline" href="{{ url_for('terms') }}">Terms & Conditions</a></li>
+          </ul>
+        </div>
+      <div>
+        <h4 class="font-semibold mb-2">Contact</h4>
+        <p class="text-slate-600">Phone: +961 76 321 010</p>
+        <p class="text-slate-600">WhatsApp: +961 76 321 010</p>
+        <a class="inline-block mt-2 px-3 py-1.5 rounded-lg bg-emerald-500 text-white" href="https://wa.me/961321010">Message us</a>
+      </div>
+    </div>
+    <div class="text-xs text-slate-500 text-center py-4">© 2025 Prestige Auto Detailing. All rights reserved.</div>
+  </footer>
+
+  <script>
+    const mb = document.getElementById('menuBtn');
+    const mm = document.getElementById('mobileMenu');
+    if (mb && mm) mb.addEventListener('click', ()=> mm.classList.toggle('hidden'));
+  </script>
+</body>
+</html>

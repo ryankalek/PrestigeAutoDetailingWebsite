@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Terms & Conditions | Prestige Detailing{% endblock %}
+{% block content %}
+<section class="max-w-4xl mx-auto px-4 py-12 md:py-16">
+  <h1 class="text-3xl font-bold mb-6">Terms & Conditions</h1>
+  <p class="mb-4 text-slate-700">Last updated: {{ now().date() if now else "2025" }}</p>
+
+  <h2 class="text-xl font-semibold mt-8 mb-3">Bookings</h2>
+  <p class="mb-4 text-slate-700">By booking an appointment online, you agree to provide accurate information about yourself and your vehicle. We reserve the right to cancel or reschedule appointments due to unforeseen circumstances.</p>
+
+  <h2 class="text-xl font-semibold mt-8 mb-3">Cancellations</h2>
+  <p class="mb-4 text-slate-700">Please notify us at least 12 hours in advance if you need to cancel or reschedule. Frequent no-shows may result in refusal of future bookings.</p>
+
+  <h2 class="text-xl font-semibold mt-8 mb-3">Services</h2>
+  <p class="mb-4 text-slate-700">Service durations are estimates. Detailing and polishing may take longer depending on the condition of the vehicle. We are not liable for delays caused by weather, equipment issues, or emergencies.</p>
+
+  <h2 class="text-xl font-semibold mt-8 mb-3">Payments</h2>
+  <p class="mb-4 text-slate-700">Payments are due upon completion of service unless agreed otherwise. Prices are subject to change and will be confirmed at the time of booking.</p>
+
+  <h2 class="text-xl font-semibold mt-8 mb-3">Liability</h2>
+  <p class="mb-4 text-slate-700">We take the utmost care with every vehicle. However, Prestige Detailing is not responsible for pre-existing damage, aftermarket modifications, or valuables left in the vehicle.</p>
+
+  <h2 class="text-xl font-semibold mt-8 mb-3">Contact</h2>
+  <p class="mb-4 text-slate-700">For questions about these Terms, contact us at +961 xx xxx xxx or via WhatsApp.</p>
+</section>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="bg-white rounded-2xl shadow p-6">
+  <h2 class="text-xl font-semibold mb-2">Upcoming appointments (next 14 days)</h2>
+  {% if grouped|length == 0 %}
+    <p class="text-sm">Nothing yet. Your calendar feed is available at <code>/feed.ics</code>.</p>
+  {% endif %}
+  {% for day, items in grouped.items() %}
+    <h3 class="mt-6 font-semibold">{{ day }}</h3>
+    <div class="divide-y">
+      {% for a in items %}
+        <div class="py-3 text-sm">
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="text-slate-600">{{ to_local(a.start_utc).strftime('%I:%M %p') }} → {{ to_local(a.end_utc).strftime('%I:%M %p') }}</span>
+            <span class="font-medium">{{ a.customer_name }}</span>
+            <span class="text-slate-600">{{ a.car_info }}</span>
+            <span class="bg-slate-100 rounded px-2 py-0.5 text-xs">{{ a.primary_service_code }}</span>
+            <a class="underline text-xs" href="{{ url_for('ics_appt', appt_id=a.id) }}">.ics</a>
+          </div>
+          <div class="text-xs text-slate-500">Phone: {{ a.phone }} · Price: ${{ a.total_price }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+  <div class="mt-8">
+    <a class="underline text-sm" href="{{ url_for('ics_feed') }}">Subscribe to full calendar (.ics)</a>
+  </div>
+</div>
+{% endblock %}

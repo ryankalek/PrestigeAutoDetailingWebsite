@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% block title %}Prestige Detailing | Book car wash, polish, tint in Beirut{% endblock %}
+{% block content %}
+
+<!-- HERO -->
+<section class="relative">
+  <div class="absolute inset-0">
+    <img src="{{ url_for('static', filename='hero.jpg') }}" class="w-full h-full object-cover" alt="">
+    <div class="absolute inset-0 bg-gradient-to-b from-black/60 to-black/40"></div>
+  </div>
+  <div class="relative max-w-6xl mx-auto px-4 py-20 md:py-28 text-white">
+    <h1 class="text-3xl md:text-5xl font-bold leading-tight">Premium detailing, wash, tint, and polish.</h1>
+    <p class="mt-3 text-lg text-white/80">Same-day slots for washes. Multi-day paint correction with updates.</p>
+    <a href="#book" class="inline-block mt-6 px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 font-semibold">Book now</a>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="max-w-6xl mx-auto px-4 py-12 md:py-16">
+  <h2 class="text-2xl md:text-3xl font-bold">Services</h2>
+  <p class="text-slate-600 mt-1">Transparent pricing. Add-ons optional.</p>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-6">
+    <div class="p-5 rounded-2xl border bg-white">
+      <h3 class="font-semibold">Quick Wash</h3>
+      <p class="text-slate-600 text-sm mt-1">Exterior wash, quick dry.</p>
+      <p class="mt-3 font-bold">$25</p>
+    </div>
+    <div class="p-5 rounded-2xl border bg-white">
+      <h3 class="font-semibold">Signature Wash</h3>
+      <p class="text-slate-600 text-sm mt-1">Foam, rims, tire shine.</p>
+      <p class="mt-3 font-bold">$60</p>
+    </div>
+    <div class="p-5 rounded-2xl border bg-white">
+      <h3 class="font-semibold">Interior Detail</h3>
+      <p class="text-slate-600 text-sm mt-1">Steam, vacuum, plastics/leather.</p>
+      <p class="mt-3 font-bold">$90</p>
+    </div>
+    <div class="p-5 rounded-2xl border bg-white">
+      <h3 class="font-semibold">Full Polish</h3>
+      <p class="text-slate-600 text-sm mt-1">Multi-stage correction, 4 days.</p>
+      <p class="mt-3 font-bold">$400</p>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="book" class="max-w-6xl mx-auto px-4 py-12 md:py-16 scroll-mt-24">
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Booking form (actual form, not a ghost) -->
+    <form id="bookingForm" action="{{ url_for('book') }}" method="post" class="bg-white rounded-2xl shadow p-6 space-y-4">
+      <h2 class="text-xl font-semibold">Book an appointment</h2>
+
+      <div>
+        <label class="block text-sm font-medium">Name</label>
+        <input name="name" required class="w-full border rounded-lg p-3" placeholder="Your name">
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium">Phone</label>
+        <input name="phone" required class="w-full border rounded-lg p-3" placeholder="+961...">
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium">Car (make/model)</label>
+        <input name="car" required class="w-full border rounded-lg p-3" placeholder="e.g., BMW 3-series, Kia Rio">
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium">Service</label>
+        <select id="serviceSelect" name="service" required class="w-full border rounded-lg p-3">
+          <option value="">Select a service</option>
+          {% for s in services %}
+            <option value="{{ s.code }}" data-price="{{ s.price }}" data-minutes="{{ s.duration_minutes }}" data-days="{{ s.duration_days }}">{{ s.name }} — ${{ s.price }}</option>
+          {% endfor %}
+        </select>
+        <p id="serviceDesc" class="text-xs text-slate-600 mt-1"></p>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium">Add-ons</label>
+        <div class="grid grid-cols-1 gap-1">
+          {% for a in addons %}
+          <label class="text-sm inline-flex items-center gap-2">
+            <input type="checkbox" name="addons" value="{{ a.code }}" data-price="{{ a.price }}" data-minutes="{{ a.duration_minutes }}" data-days="{{ a.duration_days }}">
+            {{ a.name }} — ${{ a.price }}
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium">Date</label>
+          <input id="dayInput" type="date" name="day" min="{{ today.isoformat() }}" required class="w-full border rounded-lg p-3">
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Time</label>
+          <select id="slotSelect" class="w-full border rounded-lg p-3" required></select>
+          <input type="hidden" name="slot_start_iso" id="slotStartIso">
+        </div>
+      </div>
+
+      <div class="bg-slate-50 border rounded-lg p-3 text-sm space-y-1">
+        <div id="estimateLine">Estimated duration: —</div>
+        <div id="priceLine">Estimated price: —</div>
+      </div>
+
+      <button class="w-full bg-slate-900 text-white rounded-xl p-3 font-semibold">Confirm Booking</button>
+      <p class="text-xs text-slate-500">By booking you agree to shop policies and drop-off rules.</p>
+    </form>
+
+    <!-- Side info -->
+    <div class="bg-white rounded-2xl shadow p-6 space-y-4">
+      <h3 class="text-lg font-semibold">What to expect</h3>
+      <ul class="list-disc ml-5 text-sm space-y-1">
+        <li>Washes: 1–2 hours. You’ll see real-time availability.</li>
+        <li>Polish: multi-day. We’ll message you with progress.</li>
+        <li>Calendar invite and Telegram notification on confirmation.</li>
+        <li>We operate on {{ tz }} time.</li>
+      </ul>
+      <div class="rounded-xl border p-4 text-sm">
+        <p><strong>Shop address:</strong> Kfarfakoud, Main Road</p>
+        <p><strong>Phone:</strong> +961 76 321 010</p>
+        <div class="mt-3">
+          <!-- Replace the src with your real Google Maps embed link -->
+          <iframe class="w-full h-56 rounded-lg border" loading="lazy"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d630.3282529353088!2d35.539799265308076!3d33.70068517196595!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151f1fedf75afd01%3A0xdd2e338a9014bd19!2sPrestige%20Auto%20Detailing!5e1!3m2!1sen!2slb!4v1756600656574!5m2!1sen!2slb"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ (optional, keep if you want) -->
+<section id="faq" class="max-w-6xl mx-auto px-4 py-12 md:py-16">
+  <h2 class="text-2xl md:text-3xl font-bold">Frequently asked</h2>
+  <div class="mt-6 grid md:grid-cols-2 gap-6">
+    <div class="bg-white rounded-2xl border p-5">
+      <h4 class="font-semibold">Do I pay online?</h4>
+      <p class="text-slate-600 text-sm mt-1">Pay on arrival. Online payment coming soon.</p>
+    </div>
+    <div class="bg-white rounded-2xl border p-5">
+      <h4 class="font-semibold">Can I drop off the car?</h4>
+      <p class="text-slate-600 text-sm mt-1">Yes. For polish we keep your car indoors and insured.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  // These are provided by index() as JSON-safe dicts
+  const services = JSON.parse('{{ services_data | tojson | safe }}');
+  const addons   = JSON.parse('{{ addons_data   | tojson | safe }}');
+  const tz = "{{ tz }}";
+
+  const serviceSelect = document.getElementById('serviceSelect');
+  const dayInput = document.getElementById('dayInput');
+  const slotSelect = document.getElementById('slotSelect');
+  const slotStartIso = document.getElementById('slotStartIso');
+  const estimateLine = document.getElementById('estimateLine');
+  const priceLine = document.getElementById('priceLine');
+  const serviceDesc = document.getElementById('serviceDesc');
+
+  function updateEstimate() {
+    const svc = services.find(s => s.code === serviceSelect.value);
+    const addonCodes = Array.from(document.querySelectorAll('input[name="addons"]:checked')).map(el => el.value);
+    const addObjs = addons.filter(a => addonCodes.includes(a.code));
+    let minutes = svc ? svc.duration_minutes : 0;
+    let days = svc ? svc.duration_days : 0;
+    let price = svc ? svc.price : 0;
+    addObjs.forEach(a => { minutes += a.duration_minutes; days += a.duration_days; price += a.price; });
+    estimateLine.textContent = `Estimated duration: ${days>0 ? days + ' day(s)' : minutes + ' min'}`;
+    priceLine.textContent = `Estimated price: $${price}`;
+    serviceDesc.textContent = svc ? (svc.description || '') : '';
+  }
+
+  function getISODateFromInput(input) {
+    if (input.value && /^\d{4}-\d{2}-\d{2}$/.test(input.value)) return input.value;
+    if (input.valueAsDate) {
+      const d = input.valueAsDate;
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+    const raw = input.value || "";
+    const m = raw.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+    if (m) {
+      const a = parseInt(m[1],10), b = parseInt(m[2],10), y = parseInt(m[3],10);
+      let dd, mm;
+      if (a > 12) { dd = a; mm = b; }
+      else if (b > 12) { mm = a; dd = b; }
+      else { dd = b; mm = a; }
+      return `${y}-${String(mm).padStart(2,'0')}-${String(dd).padStart(2,'0')}`;
+    }
+    return "";
+  }
+
+  async function refreshSlots() {
+    slotSelect.innerHTML = '';
+    slotStartIso.value = '';
+    const svcCode = serviceSelect.value;
+    const day = getISODateFromInput(dayInput);
+    if (!svcCode || !day) return;
+    const addonCodes = Array.from(document.querySelectorAll('input[name="addons"]:checked')).map(el => 'addons=' + encodeURIComponent(el.value)).join('&');
+    const res = await fetch(`/api/availability?service=${encodeURIComponent(svcCode)}&day=${encodeURIComponent(day)}${addonCodes ? '&' + addonCodes : ''}`);
+    const data = await res.json();
+    if (data.error) {
+      const opt = document.createElement('option');
+      opt.value = ''; opt.textContent = data.error;
+      slotSelect.appendChild(opt);
+      return;
+    }
+    if (data.length === 0) {
+      const opt = document.createElement('option');
+      opt.value = ''; opt.textContent = 'No slots available (closed or fully booked)';
+      slotSelect.appendChild(opt);
+      return;
+    }
+    data.forEach(slot => {
+      const opt = document.createElement('option');
+      opt.value = slot.start;
+      opt.textContent = slot.label; // already formatted
+      slotSelect.appendChild(opt);
+    });
+    slotStartIso.value = data[0].start;
+  }
+
+  serviceSelect.addEventListener('change', ()=>{ updateEstimate(); refreshSlots(); });
+  dayInput.addEventListener('change', refreshSlots);
+  dayInput.addEventListener('input', refreshSlots);
+  document.querySelectorAll('input[name="addons"]').forEach(cb => cb.addEventListener('change', ()=>{ updateEstimate(); refreshSlots(); }));
+  slotSelect.addEventListener('change', ()=>{ slotStartIso.value = slotSelect.value; });
+
+  updateEstimate();
+</script>
+{% endblock %}
